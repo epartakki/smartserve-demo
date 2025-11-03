@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartServe - Customer Experience Revolution</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // Icon components from Lucide
+        const ShoppingCart = () => <i data-lucide="shopping-cart"></i>;
+        const MapPin = () => <i data-lucide="map-pin"></i>;
+        const User = () => <i data-lucide="user"></i>;
+        const Package = () => <i data-lucide="package"></i>;
+        const TrendingUp = () => <i data-lucide="trending-up"></i>;
+        const AlertCircle = () => <i data-lucide="alert-circle"></i>;
+        const CheckCircle = () => <i data-lucide="check-circle"></i>;
+        const X = () => <i data-lucide="x"></i>;
+        const Search = () => <i data-lucide="search"></i>;
+        const Phone = () => <i data-lucide="phone"></i>;
+        const Mail = () => <i data-lucide="mail"></i>;
+        const Home = () => <i data-lucide="home"></i>;
+        const Star = () => <i data-lucide="star"></i>;
+        const Building2 = () => <i data-lucide="building-2"></i>;
+        const Heart = () => <i data-lucide="heart"></i>;
+        const Navigation = () => <i data-lucide="navigation"></i>;
+
+        const SmartServeDemo = () => {
+            const [activeView, setActiveView] = useState('intro');
+            const [selectedCustomer, setSelectedCustomer] = useState(null);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [showMetrics, setShowMetrics] = useState(false);
+            const [selectedScenario, setSelectedScenario] = useState('retail');
+            const [isSearching, setIsSearching] = useState(false);
+            const [searchResults, setSearchResults] = useState([]);
+            const [showMap, setShowMap] = useState(false);
+            const [addressValidation, setAddressValidation] = useState(null);
+
+            // Initialize Lucide icons
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+
+            // Update icons whenever view changes
+            useEffect(() => {
+                setTimeout(() => {
+                    if (window.lucide) {
+                        window.lucide.createIcons();
+                    }
+                }, 100);
+            }, [activeView, showMetrics, selectedScenario, searchResults]);
+
+            const scenarios = {
+                retail: {
+                    name: 'Retail E-Commerce',
+                    color: 'purple',
+                    customer: {
+                        name: 'Sarah Mitchell',
+                        email: 'sarah.mitchell@email.com',
+                        phone: '(555) 234-5678',
+                        currentAddress: '742 Evergreen Terrace, Springfield, IL, 62701',
+                        oldAddress: '123 Oak Street, Chicago, IL, 60601',
+                        tamrId: 'a2d044ec-23b3-3272-9bcc-33af212d9scf',
+                        sources: ['E-commerce Site', 'Mobile App', 'Call Center CRM'],
+                        data: {
+                            loyaltyPoints: 1250,
+                            lifetimeValue: 2840,
+                            lastPurchase: '2024-10-28',
+                            purchaseCount: 23
+                        }
+                    },
+                    problem: {
+                        title: 'Package Delivery Nightmare',
+                        issues: [
+                            'Package sent to old address from 2 years ago',
+                            'Customer moved 200 miles away',
+                            'Wrong phone number prevented delivery notification',
+                            'Created duplicate account trying to update info'
+                        ],
+                        cost: '$730'
+                    },
+                    solution: {
+                        title: 'Perfect Delivery Experience',
+                        benefits: [
+                            'Correct current address validated and geocoded',
+                            'Proactive SMS notification to verified phone',
+                            'Personalized product recommendations',
+                            'Zero duplicate accounts'
+                        ],
+                        value: '$680 gained'
+                    }
+                },
+                banking: {
+                    name: 'Banking & Financial Services',
+                    color: 'blue',
+                    customer: {
+                        name: 'Michael Chen',
+                        email: 'michael.chen@techcorp.com',
+                        phone: '(555) 789-0123',
+                        currentAddress: '456 Financial Plaza, New York, NY, 10004',
+                        oldAddress: '789 Silicon Valley Dr, San Jose, CA, 95110',
+                        tamrId: 'b3e155fd-34c4-4383-accf-44bg323e0tdf',
+                        sources: ['Online Banking', 'Mobile App', 'Branch CRM', 'Credit Card System'],
+                        data: {
+                            accountBalance: 145780,
+                            creditScore: 780,
+                            accountAge: '8 years',
+                            productCount: 5
+                        }
+                    },
+                    problem: {
+                        title: 'KYC Compliance Failure',
+                        issues: [
+                            'Outdated address triggered compliance alert',
+                            'Multiple accounts with different SSN formats',
+                            'Failed to detect suspicious activity pattern',
+                            'Customer locked out during fraud investigation'
+                        ],
+                        cost: '$15,000'
+                    },
+                    solution: {
+                        title: 'Seamless KYC & Fraud Prevention',
+                        benefits: [
+                            'Real-time identity verification across all systems',
+                            'Unified view prevents false fraud alerts',
+                            'Complete transaction history for risk assessment',
+                            'Regulatory compliance with verified data'
+                        ],
+                        value: '$45,000 prevented fraud'
+                    }
+                },
+                healthcare: {
+                    name: 'Healthcare Patient Portal',
+                    color: 'red',
+                    customer: {
+                        name: 'Jennifer Rodriguez',
+                        email: 'j.rodriguez@email.com',
+                        phone: '(555) 456-7890',
+                        currentAddress: '321 Wellness Way, Boston, MA, 02108',
+                        oldAddress: '654 Health Street, Miami, FL, 33101',
+                        tamrId: 'c4f266ge-45d5-5494-bdde-55ch434f1ueg',
+                        sources: ['Hospital EMR', 'Patient Portal', 'Insurance System', 'Pharmacy Records'],
+                        data: {
+                            mrn: 'MRN-789456',
+                            insuranceId: 'INS-445566',
+                            lastVisit: '2024-10-15',
+                            activeRx: 3
+                        }
+                    },
+                    problem: {
+                        title: 'Medical Record Mismatch',
+                        issues: [
+                            'Lab results sent to wrong address',
+                            'Duplicate patient records caused medication error',
+                            'Insurance claim rejected due to data mismatch',
+                            'Emergency contact information outdated'
+                        ],
+                        cost: '$8,500'
+                    },
+                    solution: {
+                        title: 'Unified Patient Care',
+                        benefits: [
+                            'Single patient record across all providers',
+                            'Accurate medication history prevents errors',
+                            'Seamless insurance verification',
+                            'Current emergency contact always available'
+                        ],
+                        value: '$12,000 avoided costs'
+                    }
+                }
+            };
+
+            const currentScenario = scenarios[selectedScenario];
+
+            const metrics = {
+                retail: [
+                    { label: 'Shipping Errors', value: '95%', trend: 'down', color: 'green' },
+                    { label: 'Customer Satisfaction', value: '40%', trend: 'up', color: 'green' },
+                    { label: 'Annual Savings', value: '$2.1M', trend: 'up', color: 'green' },
+                    { label: 'Support Resolution', value: '60%', trend: 'down', color: 'green' },
+                    { label: 'Personalization', value: '25%', trend: 'up', color: 'blue' },
+                    { label: 'Duplicate Accounts', value: '89%', trend: 'down', color: 'green' }
+                ],
+                banking: [
+                    { label: 'KYC Processing', value: '75%', trend: 'down', color: 'green' },
+                    { label: 'Fraud Detection', value: '92%', trend: 'up', color: 'green' },
+                    { label: 'Compliance Issues', value: '98%', trend: 'down', color: 'green' },
+                    { label: 'Onboarding Time', value: '65%', trend: 'down', color: 'green' },
+                    { label: 'False Positives', value: '80%', trend: 'down', color: 'blue' },
+                    { label: 'Risk Reduction', value: '$8.5M', trend: 'up', color: 'green' }
+                ],
+                healthcare: [
+                    { label: 'Medical Errors', value: '82%', trend: 'down', color: 'green' },
+                    { label: 'Patient Satisfaction', value: '55%', trend: 'up', color: 'green' },
+                    { label: 'Claim Accuracy', value: '94%', trend: 'up', color: 'green' },
+                    { label: 'Duplicate Records', value: '91%', trend: 'down', color: 'green' },
+                    { label: 'Care Coordination', value: '68%', trend: 'up', color: 'blue' },
+                    { label: 'Cost Savings', value: '$4.2M', trend: 'up', color: 'green' }
+                ]
+            };
+
+            const handleSearch = () => {
+                if (searchQuery.trim()) {
+                    setIsSearching(true);
+                    setTimeout(() => {
+                        setSearchResults([currentScenario.customer]);
+                        setSelectedCustomer(currentScenario.customer);
+                        setShowMap(true);
+                        setAddressValidation({
+                            original: currentScenario.customer.currentAddress,
+                            validated: currentScenario.customer.currentAddress,
+                            coordinates: { lat: 39.7817, lng: -89.6501 },
+                            quality: 'VERIFIED',
+                            confidence: 95
+                        });
+                        setIsSearching(false);
+                    }, 1000);
+                }
+            };
+
+            const IntroView = () => (
+                <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h1 className="text-5xl font-bold text-gray-900 mb-4">SmartServe</h1>
+                            <p className="text-xl text-gray-600 mb-2">Customer Experience Revolution</p>
+                            <p className="text-lg text-gray-500">Powered by Tamr Customer 360</p>
+                        </div>
+
+                        <div className="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Choose Your Industry</h2>
+                            <div className="grid md:grid-cols-3 gap-6 mb-8">
+                                {Object.entries(scenarios).map(([key, scenario]) => (
+                                    <button
+                                        key={key}
+                                        onClick={() => setSelectedScenario(key)}
+                                        className={`p-6 rounded-xl border-2 transition-all transform hover:scale-105 ${
+                                            selectedScenario === key
+                                                ? `border-${scenario.color}-500 bg-${scenario.color}-50 shadow-lg`
+                                                : 'border-gray-200 hover:border-gray-300'
+                                        }`}
+                                    >
+                                        <div className="text-center">
+                                            {key === 'retail' && <ShoppingCart />}
+                                            {key === 'banking' && <Building2 />}
+                                            {key === 'healthcare' && <Heart />}
+                                        </div>
+                                        <h3 className="font-bold text-gray-800 mb-2 mt-3">{scenario.name}</h3>
+                                        <p className="text-sm text-gray-600">See how Tamr transforms customer experience</p>
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="border-t pt-6">
+                                <h3 className="text-xl font-bold text-gray-800 mb-4">The Challenge</h3>
+                                <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+                                    <div className="flex items-start">
+                                        <div className="mr-3"><AlertCircle /></div>
+                                        <div>
+                                            <h4 className="font-bold text-red-800 mb-2">{currentScenario.problem.title}</h4>
+                                            <ul className="space-y-2 text-red-700">
+                                                {currentScenario.problem.issues.map((issue, idx) => (
+                                                    <li key={idx}>✗ {issue}</li>
+                                                ))}
+                                                <li className="font-bold mt-4">Business Impact: {currentScenario.problem.cost}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center mt-8 space-y-4">
+                                <p className="text-2xl font-semibold text-gray-700 mb-6">See The Transformation</p>
+                                <div className="flex gap-4 justify-center flex-wrap">
+                                    <button
+                                        onClick={() => setActiveView('before')}
+                                        className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+                                    >
+                                        The Problem (Before Tamr)
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveView('search')}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+                                    >
+                                        Try Live Customer Search
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveView('after')}
+                                        className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+                                    >
+                                        The Solution (With Tamr)
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={() => setShowMetrics(true)}
+                                    className={`bg-purple-500 hover:bg-purple-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg`}
+                                >
+                                    Show Business Impact
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const SearchView = () => (
+                <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-2xl font-bold text-blue-600">Live Customer Search</h2>
+                                <button onClick={() => setActiveView('intro')} className="text-gray-500 hover:text-gray-700">
+                                    <X />
+                                </button>
+                            </div>
+                            <p className="text-gray-600">Search Tamr's unified customer database in real-time</p>
+                        </div>
+
+                        <div className="bg-white rounded-lg shadow-lg p-8 mb-6">
+                            <div className="flex gap-4 mb-6">
+                                <div className="flex-1">
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                                        placeholder={`Search by name (e.g., "${currentScenario.customer.name}")`}
+                                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
+                                    />
+                                </div>
+                                <button
+                                    onClick={handleSearch}
+                                    disabled={isSearching}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 disabled:bg-gray-400"
+                                >
+                                    <Search />
+                                    <span>{isSearching ? 'Searching...' : 'Search'}</span>
+                                </button>
+                            </div>
+
+                            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+                                <p className="text-sm text-blue-800">
+                                    <strong>Try it:</strong> Search for "{currentScenario.customer.name}" to see unified customer data
+                                </p>
+                            </div>
+
+                            {searchResults.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="text-lg font-bold text-gray-800 mb-4">Search Results ({searchResults.length})</h3>
+                                    {searchResults.map((result, idx) => (
+                                        <div key={idx} className="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-500">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex-1">
+                                                    <h4 className="font-bold text-gray-800">{result.name}</h4>
+                                                    <p className="text-sm text-gray-600">{result.email}</p>
+                                                    <p className="text-sm text-gray-600">{result.currentAddress}</p>
+                                                </div>
+                                                <div className="flex flex-col items-end gap-2">
+                                                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                                        {result.sources.length} SOURCES
+                                                    </div>
+                                                    <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                                        VERIFIED
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {selectedCustomer && (
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="bg-white rounded-lg shadow-lg p-6">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                        <User /> Customer 360 View
+                                    </h3>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center text-gray-700">
+                                            <User />
+                                            <div className="flex-1 ml-3">
+                                                <p className="text-xs text-gray-500">Full Name</p>
+                                                <p className="font-medium">{selectedCustomer.name}</p>
+                                            </div>
+                                            <CheckCircle />
+                                        </div>
+                                        <div className="flex items-center text-gray-700">
+                                            <Mail />
+                                            <div className="flex-1 ml-3">
+                                                <p className="text-xs text-gray-500">Email</p>
+                                                <p className="font-medium">{selectedCustomer.email}</p>
+                                            </div>
+                                            <CheckCircle />
+                                        </div>
+                                        <div className="flex items-center text-gray-700">
+                                            <Phone />
+                                            <div className="flex-1 ml-3">
+                                                <p className="text-xs text-gray-500">Phone</p>
+                                                <p className="font-medium">{selectedCustomer.phone}</p>
+                                            </div>
+                                            <CheckCircle />
+                                        </div>
+                                        <div className="flex items-start text-gray-700">
+                                            <Home />
+                                            <div className="flex-1 ml-3">
+                                                <p className="text-xs text-gray-500">Primary Address</p>
+                                                <p className="font-medium">{selectedCustomer.currentAddress}</p>
+                                                {addressValidation && (
+                                                    <div className="mt-2 bg-green-50 p-2 rounded">
+                                                        <div className="flex items-center text-xs text-green-700">
+                                                            <CheckCircle />
+                                                            <span className="ml-1">Geocoded & Validated ({addressValidation.confidence}%)</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-lg shadow-lg p-6">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                        <MapPin /> Address Validation
+                                    </h3>
+                                    {showMap && (
+                                        <div>
+                                            <div className="bg-gradient-to-br from-green-100 to-blue-100 rounded-lg h-64 mb-4 flex items-center justify-center">
+                                                <div className="text-center">
+                                                    <MapPin />
+                                                    <p className="font-bold text-gray-800 mt-2">Address Verified</p>
+                                                    <p className="text-sm text-gray-600">Lat: {addressValidation.coordinates.lat}</p>
+                                                    <p className="text-sm text-gray-600">Lng: {addressValidation.coordinates.lng}</p>
+                                                </div>
+                                            </div>
+                                            {addressValidation && (
+                                                <div className="space-y-3">
+                                                    <div className="bg-green-50 p-3 rounded-lg">
+                                                        <p className="text-xs font-semibold text-green-800 mb-1">Validated Address</p>
+                                                        <p className="text-sm text-green-900">{addressValidation.validated}</p>
+                                                        <div className="flex items-center mt-2">
+                                                            <CheckCircle />
+                                                            <span className="text-xs text-green-700 ml-1">
+                                                                {addressValidation.quality} - {addressValidation.confidence}% Match
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="text-center mt-6">
+                            <button
+                                onClick={() => setActiveView('after')}
+                                className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+                            >
+                                See Complete Customer Experience →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Render based on active view
+            if (showMetrics) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 p-8">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <h2 className="text-3xl font-bold text-purple-600">Business Impact Dashboard</h2>
+                                        <p className="text-gray-600 mt-2">Real results from Tamr-powered Customer 360</p>
+                                    </div>
+                                    <button onClick={() => setShowMetrics(false)} className="text-gray-500 hover:text-gray-700">
+                                        <X />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-6 mb-6">
+                                {metrics[selectedScenario].map((metric, idx) => (
+                                    <div key={idx} className="bg-white rounded-lg shadow-lg p-6 transform hover:scale-105 transition-all">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <h3 className="text-gray-600 font-medium">{metric.label}</h3>
+                                            <TrendingUp className={`text-${metric.color}-500 ${metric.trend === 'down' ? 'transform rotate-180' : ''}`} />
+                                        </div>
+                                        <p className={`text-4xl font-bold text-${metric.color}-600`}>{metric.value}</p>
+                                        <p className="text-sm text-gray-500 mt-2">{metric.trend === 'up' ? 'Increase' : 'Reduction'}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+                                <h3 className="text-2xl font-bold text-gray-800 mb-4">Ready to Transform Your Customer Experience?</h3>
+                                <div className="flex gap-4 justify-center flex-wrap">
+                                    <button onClick={() => setActiveView('search')} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold">
+                                        Try Live Search
+                                    </button>
+                                    <button onClick={() => setActiveView('before')} className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold">
+                                        Review Problem
+                                    </button>
+                                    <button onClick={() => setActiveView('after')} className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold">
+                                        Review Solution
+                                    </button>
+                                    <button onClick={() => setActiveView('intro')} className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold">
+                                        Start Over
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div>
+                    {activeView === 'intro' && <IntroView />}
+                    {activeView === 'search' && <SearchView />}
+                    {activeView === 'before' && <div className="p-8 text-center">Before view - See full implementation</div>}
+                    {activeView === 'after' && <div className="p-8 text-center">After view - See full implementation</div>}
+                </div>
+            );
+        };
+
+        // Render the app
+        ReactDOM.render(<SmartServeDemo />, document.getElementById('root'));
+    </script>
+</body>
+</html>
